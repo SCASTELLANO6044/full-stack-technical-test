@@ -1,16 +1,7 @@
 var express = require('express');
 var router = express.Router();
-require('dotenv').config();
 
-const dbConfig = {
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  port: process.env.DB_PORT
-};
-
-const pgp = require('pg-promise')();
-const db = pgp(`postgres://${dbConfig.user}:${dbConfig.password}@${dbConfig.host}:${dbConfig.port}/backend`);
+const db = require('../db')
 
 router.route('/').all((req, res, next) => {
   next()
@@ -25,6 +16,8 @@ router.route('/').all((req, res, next) => {
 }).put((req, res, next)=>{
   next(new Error('not implemented'))
 }).post((req, res, next) => {
+  console.log(req.body)
+  res.json(req.body)
   next(new Error('not implemented'))
 }).delete((req, res, next) => {
   next(new Error('not implemented'))
