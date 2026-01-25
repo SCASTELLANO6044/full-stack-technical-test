@@ -10,11 +10,11 @@ const dbConfig = {
 };
 
 const pgp = require('pg-promise')();
-
 const db = pgp(`postgres://${dbConfig.user}:${dbConfig.password}@${dbConfig.host}:${dbConfig.port}/backend`);
 
-/* GET upload-logs */
-router.get('/', async function (req, res, next) {
+router.route('/').all((req, res, next) => {
+  next()
+}).get(async function (req, res, next) {
   try {
     const logs = await db.any('SELECT * FROM logs');
     res.json(logs);
@@ -22,6 +22,12 @@ router.get('/', async function (req, res, next) {
     console.error('ERROR:', error);
     res.status(500).json({ error: 'Database error' });
   }
-});
+}).put((req, res, next)=>{
+  next(new Error('not implemented'))
+}).post((req, res, next) => {
+  next(new Error('not implemented'))
+}).delete((req, res, next) => {
+  next(new Error('not implemented'))
+})
 
 module.exports = router;
