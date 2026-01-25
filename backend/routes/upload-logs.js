@@ -6,7 +6,8 @@ const db = require('../db')
 
 router.route('/').all((req, res, next) => {
   next()
-}).get(async function (req, res, next) {
+})
+.get(async function (req, res, next) {
   try {
     const logs = await db.any('SELECT * FROM logs');
     res.json(logs);
@@ -14,9 +15,11 @@ router.route('/').all((req, res, next) => {
     console.error('ERROR:', error);
     res.status(500).json({ error: 'Database error' });
   }
-}).put((req, res, next)=>{
+})
+.put((req, res, next)=>{
   next(new Error('not implemented'))
-}).post(async function(req, res, next) {
+})
+.post(async function(req, res, next) {
   try{
     const query = pgp.helpers.insert(req.body, ['timestamp', 'level', 'message','payload'], 'logs')
     await db.none(query);
@@ -25,7 +28,8 @@ router.route('/').all((req, res, next) => {
     console.error('ERROR:', error);
     res.status(500).json({ error: 'Database error' });
   }
-}).delete((req, res, next) => {
+})
+.delete((req, res, next) => {
   next(new Error('not implemented'))
 })
 
