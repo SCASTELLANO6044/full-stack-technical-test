@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const pgp = require('pg-promise')();
 
-const db = require('../db')
 const supabase = require('../db/supabase');
 
 router.route('/').all((req, res, next) => {
@@ -25,8 +23,14 @@ router.route('/').all((req, res, next) => {
 })
 .post(async function(req, res, next) {
   try{
-    const query = pgp.helpers.insert(req.body, ['timestamp', 'level', 'message','payload'], 'logs')
-    await db.none(query);
+    const { data, error } = await supabase
+      .from('logs')
+      .insert({timestamp: req.body.timestamp, level: req.body.level, message: req.body.message, payload: req.body.payload })
+      .select()
+    if (error) {
+      console.error('ERROR:', error);
+      res.status(500).json({ error: 'Database error' });
+    }
     res.sendStatus(200)
   }catch(error){
     console.error('ERROR:', error);
