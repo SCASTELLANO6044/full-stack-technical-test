@@ -1,12 +1,19 @@
 var express = require('express');
 var router = express.Router();
 
-
-const db = require('../db')
+const supabase = require('../db/supabase');
 
 router.param('stats_id', async function(req, res, next, id){
   try{
-    req.log = await db.any(`SELECT * FROM stats WHERE stats.id = ${id}`)
+    const { data, error } = await supabase
+      .from('logs')
+      .select()
+      .eq('id', id)
+    req.log = data
+    if (error) {
+      console.error('ERROR:', error);
+      res.status(500).json({ error: 'Database error' });
+    }
     next()
   } catch (error) {
     console.error('ERROR:', error);
