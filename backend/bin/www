@@ -6,7 +6,9 @@
 
 var app = require('../app');
 var debug = require('debug')('backend:server');
+
 var http = require('http');
+require('../queue/worker'); // Start the worker
 
 /**
  * Get port from environment and store in Express.
