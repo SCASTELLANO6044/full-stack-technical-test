@@ -28,7 +28,7 @@ const worker = new Worker('log-queue', async job => {
         console.error(`Job ${job.id} failed:`, error);
         throw error;
     }
-}, { connection });
+}, { connection, concurrency: 4 });
 
 worker.on('completed', job => {
     console.log(`Job ${job.id} has completed!`);
