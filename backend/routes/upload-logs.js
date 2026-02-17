@@ -8,16 +8,7 @@ router.route('/').all((req, res, next) => {
   next()
 })
   .get(async function (req, res, next) {
-    try {
-      const { data, error } = await supabase
-        .from('logs')
-        .select()
-      console.log(error)
-      res.json(data);
-    } catch (error) {
-      console.error('ERROR:', error);
-      res.status(500).json({ error: 'Database error' });
-    }
+    next(new Error('not implemented'))
   })
   .put((req, res, next) => {
     next(new Error('not implemented'))
