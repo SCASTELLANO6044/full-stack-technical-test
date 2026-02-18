@@ -1,4 +1,4 @@
-import { Worker } from 'bullmq';
+import { MetricsTime, Worker } from 'bullmq';
 import connection from './connection';
 import supabase from '../db/supabase';
 
@@ -28,7 +28,13 @@ const worker = new Worker('log-queue', async job => {
         console.error(`Job ${job?.id} failed:`, error);
         throw error;
     }
-}, { connection: connection as any, concurrency: 4 });
+}, {
+    connection: connection as any,
+    concurrency: 4,
+    metrics: {
+        maxDataPoints: MetricsTime.ONE_WEEK * 2,
+    },
+});
 
 worker.on('completed', job => {
     console.log(`Job ${job?.id} has completed!`);
