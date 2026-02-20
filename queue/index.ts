@@ -1,7 +1,7 @@
 import { Queue } from "bullmq";
 import connection from "./connection";
 
-const logQueue = new Queue('log-queue',
+const logQueue = new Queue('log-processing-queue',
     {
         connection: connection as any,
         defaultJobOptions: {

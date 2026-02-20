@@ -2,7 +2,7 @@ import { MetricsTime, Worker } from 'bullmq';
 import connection from './connection';
 import supabase from '../db/supabase';
 
-const worker = new Worker('log-queue', async job => {
+const worker = new Worker('log-processing-queue', async job => {
     console.log(`Processing job ${job?.id} with data:`, job?.data);
     const { timestamp, level, message, payload } = job?.data;
 
