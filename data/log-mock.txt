@@ -1,0 +1,20 @@
+[2025-02-20T10:00:00Z] INFO Application started {"version": "1.4.2", "environment": "production"}
+[2025-02-20T10:00:02Z] INFO Configuration loaded {"configFile": "/etc/app/config.json"}
+[2025-02-20T10:00:05Z] INFO Database connection established {"host": "db-prod-01", "port": 5432}
+[2025-02-20T10:00:08Z] DEBUG Cache initialized {"cacheSizeMB": 256}
+[2025-02-20T10:00:12Z] INFO User login successful {"userId": 1024, "ip": "192.168.1.10"}
+[2025-02-20T10:00:15Z] WARN Slow query detected {"queryTimeMs": 842, "query": "SELECT * FROM orders"}
+[2025-02-20T10:00:18Z] INFO API request received {"method": "GET", "endpoint": "/api/products"}
+[2025-02-20T10:00:20Z] INFO API request completed {"status": 200, "durationMs": 45}
+[2025-02-20T10:00:23Z] ERROR Database timeout {"userId": 1024, "ip": "192.168.1.10"}
+[2025-02-20T10:00:26Z] DEBUG Retrying database operation {"attempt": 1, "maxAttempts": 3}
+[2025-02-20T10:00:29Z] INFO Background job started {"jobId": "job-7842", "type": "email_sender"}
+[2025-02-20T10:00:32Z] INFO Email sent {"recipient": "user@example.com", "template": "welcome"}
+[2025-02-20T10:00:35Z] WARN Disk space low {"availableGB": 4.2, "thresholdGB": 5}
+[2025-02-20T10:00:38Z] INFO File uploaded {"fileName": "report.pdf", "sizeBytes": 842193}
+[2025-02-20T10:00:41Z] DEBUG Session refreshed {"sessionId": "sess-993847"}
+[2025-02-20T10:00:44Z] INFO User logout {"userId": 1024}
+[2025-02-20T10:00:47Z] ERROR Failed to process payment {"orderId": 55321, "errorCode": "PAYMENT_DECLINED"}
+[2025-02-20T10:00:50Z] INFO Service health check passed {"uptimeSeconds": 86421}
+[2025-02-20T10:00:53Z] DEBUG Memory usage {"usedMB": 512, "totalMB": 1024}
+[2025-02-20T10:00:56Z] INFO Application shutdown initiated {"reason": "deployment"}
