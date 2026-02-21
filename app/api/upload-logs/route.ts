@@ -1,29 +1,52 @@
+import { randomUUID } from "crypto";
+import { writeFile, mkdir } from "fs/promises";
+import path from "path";
 import logQueue from "@/queue";
 
 export async function POST(request: Request) {
     try {
-        const body = await request.json();
-        const payloadSize = JSON.stringify(body?.payload as any).length;
-        const priority = payloadSize < 1000 ? 1 : 10; // Simple heuristic: < 1KB = High Priority
+        const formData = await request.formData();
+        const file = formData.get("file");
 
-        const job = await logQueue.add('upload-log', {
-            timestamp: body?.timestamp as any,
-            level: body?.level as any,
-            message: body?.message as any,
-            payload: body?.payload as any
+        if (!file || !(file instanceof Blob)) {
+            return new Response(
+                JSON.stringify({ error: "No file provided. Send a file with key 'file' in form-data." }),
+                { status: 400, headers: { "Content-Type": "application/json" } }
+            );
+        }
+
+        // Generate a unique file ID and save to disk
+        const fileId = randomUUID();
+        const uploadsDir = path.join(process.cwd(), "data", "uploads");
+        await mkdir(uploadsDir, { recursive: true });
+
+        const originalName = (file as File).name || "unknown.txt";
+        const filePath = path.join(uploadsDir, `${fileId}.txt`);
+        const buffer = Buffer.from(await file.arrayBuffer());
+        await writeFile(filePath, buffer);
+
+        // Prioritize smaller files (< 1KB = high priority)
+        const priority = buffer.length < 1000 ? 1 : 10;
+
+        const job = await logQueue.add("upload-log", {
+            fileId,
+            filePath,
+            originalName,
         }, {
-            priority, // Lower number = Higher priority
+            priority,
         });
+
         console.log(`Job added to queue with id: ${job.id}`);
-        return new Response(JSON.stringify({ job }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-        });
+
+        return new Response(
+            JSON.stringify({ jobId: job.id }),
+            { status: 200, headers: { "Content-Type": "application/json" } }
+        );
     } catch (error) {
-        console.error('ERROR:', error);
-        return new Response(JSON.stringify({ error: 'Queue error' }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
+        console.error("ERROR:", error);
+        return new Response(
+            JSON.stringify({ error: "Queue error" }),
+            { status: 500, headers: { "Content-Type": "application/json" } }
+        );
     }
 }
