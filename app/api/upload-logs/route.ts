@@ -3,6 +3,39 @@ import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import logQueue from "@/queue";
 
+/**
+ * @openapi
+ * /api/upload-logs:
+ *   post:
+ *     summary: Upload a log file
+ *     description: Uploads a log file to the server and adds it to the processing queue.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: The log file to upload.
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 jobId:
+ *                   type: string
+ *                   description: The ID of the job added to the queue.
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal Server Error
+ */
 export async function POST(request: Request) {
     try {
         const formData = await request.formData();
